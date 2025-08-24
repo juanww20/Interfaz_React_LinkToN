@@ -1,13 +1,19 @@
 //import reactLogo from './assets/react.svg'
 //import viteLogo from '/vite.svg'
+import { Routes, Route } from "react-router";
+import Principal from "./PaginaPrincipal/Principal"
+import Header from "./PaginaPrincipal/components/header";
 import './App.css'
 
 function App() {
 
   return (
-    <>
-      <h1>Hello World</h1>
-    </>
+    <div className="App">
+      <Header></Header>
+      <Routes>
+        <Route path="/" element={<Principal></Principal>}></Route>
+      </Routes>
+    </div>
   )
 }
 
