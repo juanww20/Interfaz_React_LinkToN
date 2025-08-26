@@ -35,7 +35,7 @@ const Carousel = () => {
     slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2500,
+    autoplaySpeed: 3500,
     pauseOnHover: true,
     cssEase: 'linear',
     responsive: [
