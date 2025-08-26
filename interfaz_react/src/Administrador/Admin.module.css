@@ -5,14 +5,14 @@
     padding:  2em 2em;
 }
 
-.control-panel,
+.controlPanel,
 .playground {
     background-color: #fafafa;
     border-radius: 8px;
     
 }
 
-.control-panel {
+.controlPanel {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -39,7 +39,7 @@
     gap: 15px;
 }
 
-.control-group {
+.controlGroup {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -57,7 +57,7 @@ input[type="file"] {
     margin-right: 10px;
 }
 
-.color-hex {
+.colorHex {
     font-family: monospace;
     background: #eee;
     padding: 2px 6px;
@@ -73,7 +73,7 @@ input[type="file"] {
                 
 }
 
-.saved-styles {
+.savedstyles {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -94,7 +94,7 @@ input[type="file"] {
 }
 
 /* Contenedor con scroll */
-.custom-scrollbar {
+.customScrollbar {
   max-height: 40vh; /* 60% del viewport height */
   overflow-y: auto;
   padding-right: 8px;
@@ -106,38 +106,38 @@ input[type="file"] {
 }
 
 /* WebKit scrollbars */
-.custom-scrollbar::-webkit-scrollbar {
+.customScrollbar::-webkit-scrollbar {
   width: 10px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
+.customScrollbar::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
   margin: 10px 0;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
+.customScrollbar::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
   border: 2px solid #f1f1f1;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+.customScrollbar::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .custom-scrollbar {
+  .customScrollbar {
     max-height: 50vh;
   }
   
-  .custom-scrollbar::-webkit-scrollbar {
+  .customScrollbar::-webkit-scrollbar {
     width: 6px;
   }
 }
 
-.saved-style-item {
+.savedStyleItem {
   padding: 10px;
   margin-bottom: 10px;
   background: white;
@@ -145,21 +145,21 @@ input[type="file"] {
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.color-preview {
+.colorPreview {
   justify-content: center;
   display: flex;
   gap: 5px;
   margin-bottom: 5px;
 }
 
-.color-box {
+.colorBox {
   width: 60px;
   height: 30px;
   border-radius: 4px;
   border: 1px solid #ddd;
 }
 
-.style-actions {
+.styleActions {
   align-items: center;
   justify-content: center;
   display: flex;
@@ -167,10 +167,19 @@ input[type="file"] {
   margin-top: 5px;
 }
 
-.style-actions button {
+.styleActions button {
   padding: 4px 8px;
   font-size: 12px;
+  background-color: #3498db;
   width: 90px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.styleActions button:hover{
+  background-color: #2980b9;
 }
 
 
@@ -201,7 +210,7 @@ button:hover {
     background-color: #27ae60;
 }
 
-.save-section {
+.savesection {
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
@@ -233,7 +242,7 @@ h1 {
     line-height: 1.6;
 }
 
-.div-with-border {
+.divWithBorder {
     border: 2px solid;
     padding: 15px;
     border-radius: 5px;
@@ -279,7 +288,7 @@ h1 {
     
 }
 
-.color-section {
+.colorsection {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -1083,7 +1092,7 @@ p strong{
   }
   
   
-  .control-panel{
+  .controlPanel{
     min-height: 500px;
     max-width: 550px;
     max-height: 550px;
