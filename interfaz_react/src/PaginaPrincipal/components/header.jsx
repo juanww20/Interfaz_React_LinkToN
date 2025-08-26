@@ -109,6 +109,9 @@ const Header = () => {
               <li>
                 <a href="#contact" onClick={closeMenu}>Contact Us</a>
               </li>
+              <li>
+                <Link to="/admin" onClick={closeMenu}>Admin</Link>
+              </li>
             </ul>
           </nav>
 
