@@ -1,0 +1,253 @@
+/* TypographyEditor.module.css */
+
+.typographyEditor {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.editorColumn,
+.savedColumn,
+.previewColumn {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.typographyEditor h2 {
+  margin-top: 0;
+  color: #2c3e50;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.controlGroup {
+  margin-bottom: 20px;
+}
+
+.controlGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #34495e;
+}
+
+.slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: #ddd;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3498db;
+  cursor: pointer;
+}
+
+.fontUpload {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.uploadGroup {
+  margin-bottom: 15px;
+}
+
+.uploadBtn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: #ecf0f1;
+  border: 1px dashed #bdc3c7;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 5px;
+  transition: all 0.3s;
+}
+
+.uploadBtn:hover {
+  background: #dfe6e9;
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 0.8em;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.typographyEditor button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.saveBtn {
+  background: #2ecc71;
+  color: white;
+}
+
+.saveBtn:hover {
+  background: #27ae60;
+}
+
+.resetBtn {
+  background: #e74c3c;
+  color: white;
+}
+
+.resetBtn:hover {
+  background: #c0392b;
+}
+
+/* Columna de configuraciones guardadas */
+.configList {
+  margin-top: 20px;
+}
+
+.configItem {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.configItem:hover {
+  border-color: #3498db;
+}
+
+.configItemActive {
+  border-color: #3498db;
+  background: #f0f8ff;
+}
+
+.configPreview {
+  margin-bottom: 10px;
+}
+
+.previewTitle {
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.previewSubtitle {
+  font-weight: 600;
+  margin: 5px 0;
+}
+
+.previewText {
+  margin: 5px 0;
+}
+
+.configMeta {
+  font-size: 0.9em;
+  color: #7f8c8d;
+  margin: 10px 0;
+}
+
+.configMeta span {
+  display: block;
+}
+
+.aplicarBtn {
+  background: #2ecc71;
+  color: white;
+  font-size: 0.8em;
+  padding: 5px 10px;
+  margin: 0px 5px;
+}
+
+.aplicarBtn:hover {
+  background: #27ae60;
+}
+
+.editarBtn {
+  background: #6e7b72;
+  color: white;
+  font-size: 0.8em;
+  padding: 5px 10px;
+  margin: 0px 5px;
+}
+
+.editarBtn:hover {
+  background: #525a55;
+}
+
+.deleteBtn {
+  background: #e74c3c;
+  color: white;
+  font-size: 0.8em;
+  padding: 5px 10px;
+  margin: 0px 5px;
+}
+
+.deleteBtn:hover {
+  background: #c0392b;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 0;
+  color: #7f8c8d;
+}
+
+/* Columna de vista previa */
+.previewContent {
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.previewContent h1 {
+  margin-top: 0;
+  font-family: var(--primary-font, inherit);
+}
+
+.previewContent h2 {
+  font-family: var(--secondary-font, inherit);
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.fontDisplay {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.configActions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .typographyEditor {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}

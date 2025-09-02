@@ -22,7 +22,7 @@
     width: 400px;
 }
 
-.font-panel {
+.fontPanel {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -279,7 +279,7 @@ h1 {
     gap: 20px;
 }
 
-.font-section {
+.fontSection {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -507,13 +507,13 @@ h1 {
 
 
 
-.font-upload-container {
+.fontUploadContainer {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid #eee;
 }
 
-.upload-section {
+.uploadSection {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -524,7 +524,7 @@ h1 {
   }
 }
 
-.upload-btn {
+.uploadBtn {
   background: #3498db;
   color: white;
   border: none;
@@ -586,7 +586,7 @@ h1 {
   }
 }
 
-.font-preview {
+.fontPreview {
   margin: 1rem 0;
   padding: 1rem;
   border: 1px solid #ddd;
@@ -1086,7 +1086,7 @@ p strong{
     padding: 10px;
   }
 
-  .font-section {
+  .fontSection {
     flex-direction: column;
     align-items: center;
   }
