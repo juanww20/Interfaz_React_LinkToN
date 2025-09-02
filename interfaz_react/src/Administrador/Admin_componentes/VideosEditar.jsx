@@ -48,6 +48,62 @@ const VideoUploader = () => {
     previewVideoSrcRef.current = previewVideoSrc;
   }, [previewVideoSrc]);
 
+  // Función para obtener duración de medios
+  const getMediaDuration = useCallback((file) => {
+    return new Promise((resolve) => {
+      const url = URL.createObjectURL(file);
+      const media = file.type.includes('audio') ? new Audio() : document.createElement('video');
+      
+      media.src = url;
+      media.onloadedmetadata = () => {
+        resolve(media.duration);
+        URL.revokeObjectURL(url);
+      };
+      
+      media.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve(0);
+      };
+    });
+  }, []);
+
+  // Función para estimar duración de subtítulos VTT
+  const getSubtitleDuration = useCallback((file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const vttContent = e.target.result;
+        const lines = vttContent.split('\n');
+        let lastTime = 0;
+        
+        for (const line of lines) {
+          if (line.includes('-->')) {
+            const parts = line.split('-->')[1].trim().split(' ');
+            const endTime = parts[0];
+            const seconds = convertVttTimeToSeconds(endTime);
+            lastTime = Math.max(lastTime, seconds);
+          }
+        }
+        
+        resolve(lastTime || 0);
+      };
+      reader.onerror = () => resolve(0);
+      reader.readAsText(file);
+    });
+  }, []);
+
+  // Convertir formato VTT a segundos
+  const convertVttTimeToSeconds = useCallback((timeStr) => {
+    const parts = timeStr.split(':');
+    if (parts.length === 3) {
+      const hours = parseFloat(parts[0]);
+      const minutes = parseFloat(parts[1]);
+      const seconds = parseFloat(parts[2]);
+      return (hours * 3600) + (minutes * 60) + seconds;
+    }
+    return 0;
+  }, []);
+
   // Maneja la selección del archivo de video
   const handleVideoUpload = (event) => {
     const file = event.target.files[0];
@@ -98,8 +154,32 @@ const VideoUploader = () => {
   };
 
   // Prepara los datos y muestra la sección de previsualización
-  const generatePreview = () => {
+  const generatePreview = async () => {
     if (!videoData.file) return;
+
+    // Validación de duración
+    try {
+      const videoDuration = await getMediaDuration(videoData.file);
+      
+      // Verificar audios
+      for (const audioFile of videoData.audioFiles) {
+        const audioDuration = await getMediaDuration(audioFile);
+        if (Math.abs(audioDuration - videoDuration) > 0.5) {
+          throw new Error(`El audio "${audioFile.name}" no coincide con la duración del video`);
+        }
+      }
+      
+      // Verificar subtítulos
+      for (const subFile of videoData.subtitleFiles) {
+        const subDuration = await getSubtitleDuration(subFile);
+        if (Math.abs(subDuration - videoDuration) > 0.5) {
+          throw new Error(`Los subtítulos "${subFile.name}" no coinciden con la duración del video`);
+        }
+      }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+      return;
+    }
 
     // Limpiar URLs previas
     if (previewVideoSrcRef.current) {
@@ -118,15 +198,17 @@ const VideoUploader = () => {
     const newAudioTracks = [{ label: 'Audio original', url: null }];
     videoData.audioFiles.forEach(file => {
       newAudioTracks.push({
-        label: file.name.replace(/\.[^/.]+$/, ""),
-        url: URL.createObjectURL(file)
+        label: `${file.name.replace(/\.[^/.]+$/, "")} (${formatFileSize(file.size)})`,
+        url: URL.createObjectURL(file),
+        rawName: file.name.replace(/\.[^/.]+$/, "")
       });
     });
 
     const newSubtitles = videoData.subtitleFiles.map(file => ({
-      label: file.name.replace('.vtt', '').replace(/_/g, ' '),
+      label: `${file.name.replace('.vtt', '').replace(/_/g, ' ')} (${formatFileSize(file.size)})`,
       url: URL.createObjectURL(file),
-      lang: 'es'
+      lang: 'es',
+      rawName: file.name.replace('.vtt', '').replace(/_/g, ' ')
     }));
 
     setPreviewVideoSrc(videoUrl);
@@ -134,7 +216,7 @@ const VideoUploader = () => {
     setSubtitles(newSubtitles);
     setShowPreview(true);
     setSelectedAudioTrack(0);
-    setIsPlayerInitialized(false); // Resetear la inicialización
+    setIsPlayerInitialized(false);
   };
 
   // Inicializar el reproductor cuando el elemento video esté disponible
@@ -164,7 +246,7 @@ const VideoUploader = () => {
               kind: 'subtitles',
               src: sub.url,
               srclang: sub.lang,
-              label: sub.label,
+              label: sub.rawName,
               default: index === 0
             }))
           }, () => {
@@ -316,7 +398,7 @@ const VideoUploader = () => {
   return (
     <div className={styles.videoUploadContainer}>
       <div className={styles.uploadSection}>
-        <h2>Subir y Configurar Video</h2>
+        <h2>Subir Video</h2>
         <form onSubmit={(e) => e.preventDefault()} className={styles.uploadForm}>
           <div className={styles.formGroup}>
             <label htmlFor="video-name">Nombre del video:</label>
@@ -359,7 +441,7 @@ const VideoUploader = () => {
               <div className={styles.fileList}>
                 {videoData.audioFiles.map((file, index) => (
                   <div key={index} className={styles.fileItem}>
-                    <span>{file.name}</span>
+                    <span>{file.name} ({formatFileSize(file.size)})</span>
                     <button
                       onClick={() => removeAudio(index)}
                       className={styles.removeBtn}
@@ -385,7 +467,7 @@ const VideoUploader = () => {
               <div className={styles.fileList}>
                 {videoData.subtitleFiles.map((file, index) => (
                   <div key={index} className={styles.fileItem}>
-                    <span>{file.name}</span>
+                    <span>{file.name} ({formatFileSize(file.size)})</span>
                     <button
                       onClick={() => removeSubtitle(index)}
                       className={styles.removeBtn}
