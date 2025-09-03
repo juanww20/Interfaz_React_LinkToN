@@ -112,6 +112,12 @@ const Header = () => {
               <li>
                 <Link to="/admin" onClick={closeMenu}>Admin</Link>
               </li>
+              <li>
+                <Link to="/usuario" onClick={closeMenu}>Usuario Perfil</Link>
+              </li>
+              <li>
+                <Link to="/login" onClick={closeMenu}>Login</Link>
+              </li>
             </ul>
           </nav>
 
