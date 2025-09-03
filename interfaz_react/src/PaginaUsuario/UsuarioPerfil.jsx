@@ -14,7 +14,7 @@ function UsuarioPerfil() {
 
     const goToEdit = () => {
         // Navegar a la página de edición
-        navigate('/');
+        navigate('/editar');
     };
 
   return (
