@@ -6,16 +6,20 @@ import Portfolio from './components/Porfolio'
 import Carousel from './components/CarouselFoto'
 import ContactSection from './components/ContactSection'
 import VideoCarousel from './components/CarouselVideo'
+import { useAuth } from '../store/AuthContext'
 
 function Principal() {
+
+    const { isAdmin } = useAuth();
+
     return (
         <>
             <Intro></Intro>
             <About></About>
             <Services></Services>
             <Portfolio></Portfolio>
-            <Carousel></Carousel>
-            <VideoCarousel></VideoCarousel>
+            <Carousel showDelete={false} isAdmin={isAdmin}></Carousel>
+            <VideoCarousel showDelete={false} isAdmin={isAdmin}></VideoCarousel>
             <ContactSection></ContactSection>
         </>
 

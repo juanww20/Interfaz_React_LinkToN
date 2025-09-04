@@ -15,6 +15,7 @@
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
     "@types/video.js": "^7.3.58",
+    "axios": "^1.11.0",
     "cropperjs": "^2.0.1",
     "react": "^19.1.1",
     "react-cropper": "^2.3.3",
@@ -23,6 +24,7 @@
     "react-router-dom": "^7.8.2",
     "react-slick": "^0.31.0",
     "slick-carousel": "^1.8.1",
+    "sweetalert2": "^11.23.0",
     "video.js": "^8.23.4"
   },
   "devDependencies": {

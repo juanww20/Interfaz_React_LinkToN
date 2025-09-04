@@ -1,83 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-import VideoExample from '../../temp/eu.mp4';
-import AudioExample from '../../temp/0006.mp3';
-import SubtituloExample from '../../temp/op.vtt';
-import SubtituloExample2 from '../../temp/op1.vtt';
 import './VideoCarousel.css';
+import Swal from 'sweetalert2';
+import { videoService } from "../../services/project_4/multimediaService"
 
 // IMPORTACIONES PARA EL CARRUSEL (REACT-SLICK)
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 
-const VideoCarousel = () => {
+const VideoCarousel = ({ showDelete = false, isAdmin = false }) => {
   // Estado para los videos
-  const [videos, setVideos] = useState([
-    {
-      id: 1,
-      title: 'Naturaleza en 4K',
-      videoSrc: VideoExample,
-      thumbnail: '',
-      format: 'mp4',
-      size: 1024 * 1024,
-      duration: 60,
-      audioTracks: [
-        { label: 'Audio original', src: null },
-        { label: 'Música relajante', src: AudioExample }
-      ],
-      subtitles: [
-        { label: 'Español', lang: 'es', src: SubtituloExample },
-        { label: 'Ingles', lang: 'in', src: SubtituloExample2 }
-      ]
-    },
-    {
-      id: 2,
-      title: 'Ciudad al atardecer',
-      videoSrc: VideoExample,
-      thumbnail: '',
-      format: 'mp4',
-      size: 2.5 * 1024 * 1024,
-      duration: 45,
-      audioTracks: [
-        { label: 'Audio original', src: null },
-        { label: 'Sonidos urbanos', src: AudioExample }
-      ],
-      subtitles: [
-        { label: 'Español', lang: 'es', src: SubtituloExample },
-        { label: 'Ingles', lang: 'in', src: SubtituloExample2 }
-      ]
-    },
-    {
-      id: 3,
-      title: 'Playas paradisíacas',
-      videoSrc: VideoExample,
-      thumbnail: '',
-      format: 'mp4',
-      size: 3.8 * 1024 * 1024,
-      duration: 90,
-      audioTracks: [
-        { label: 'Audio original', src: null },
-        { label: 'Olas del mar', src: AudioExample }
-      ],
-      subtitles: [{ label: 'Español', lang: 'es', src: SubtituloExample }]
-    },
-    {
-      id: 4,
-      title: 'Montañas nevadas',
-      videoSrc: VideoExample,
-      thumbnail: '',
-      format: 'mp4',
-      size: 4.2 * 1024 * 1024,
-      duration: 75,
-      audioTracks: [
-        { label: 'Audio original', src: null },
-        { label: 'Sonidos de viento', src: AudioExample }
-      ],
-      subtitles: [{ label: 'Español', lang: 'es', src: SubtituloExample }]
-    }
-  ]);
+  const [videos, setVideos] = useState([]);
 
   // Estado del modal
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -88,6 +23,44 @@ const VideoCarousel = () => {
   const audioElementRef = useRef(null);
   const videoRef = useRef(null);
   const playerRef = useRef(null);
+
+  const fetchVideos = async () => {
+      const res = await videoService.getVideos();
+      if (res && res.data) {
+        setVideos(res.data);
+      }
+  }; 
+
+  // función para obtener videos desde el backend
+  useEffect(() => {
+    fetchVideos();
+  }, []);
+
+
+  // funcion para eliminar un video
+  const confirmDelete = async (id) => {
+  const result = await Swal.fire({
+    title: "¿Eliminar video?",
+    text: "Esta acción no se puede deshacer",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
+  if (result.isConfirmed) {
+    try {
+      // Aquí usas tu servicio de API para eliminar
+      await videoService.deleteVideo(id);
+      await fetchVideos(); // vuelve a cargar la lista
+      Swal.fire("Eliminado", "El video ha sido eliminado", "success");
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "No se pudo eliminar el video", "error");
+    }
+  }
+};
   
   // Configuración de React-Slick
   const sliderSettings = {
@@ -230,7 +203,7 @@ const VideoCarousel = () => {
       player.volume(1);
     } else if (trackIndex < selectedVideo.audioTracks.length) {
       const track = selectedVideo.audioTracks[trackIndex];
-      audioElementRef.current = new Audio(track.src);
+      audioElementRef.current = new Audio(track.path);
       audioElementRef.current.currentTime = player.currentTime();
       audioElementRef.current.playbackRate = player.playbackRate();
       if (!player.paused()) {
@@ -245,6 +218,7 @@ const VideoCarousel = () => {
     setSelectedVideo(video);
     setSelectedAudioTrack(0);
   }, []);
+
   const closeModal = useCallback(() => {
     if (playerRef.current) {
       playerRef.current.dispose();
@@ -266,6 +240,8 @@ const VideoCarousel = () => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }, []);
+
+  // Formatear duración en segundos a mm:ss
   const formatDuration = useCallback((seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -279,7 +255,7 @@ const VideoCarousel = () => {
         const updatedVideos = await Promise.all(
           videos.map(async (video) => {
             if (!video.thumbnail) {
-              const thumbnailUrl = await generateVideoThumbnail(video.videoSrc);
+              const thumbnailUrl = await generateVideoThumbnail(video.path);
               return { ...video, thumbnail: thumbnailUrl };
             }
             return video;
@@ -292,7 +268,7 @@ const VideoCarousel = () => {
     };
     generateThumbnails();
     // FIX: Se elimina 'videos' del arreglo para evitar el bucle infinito
-  }, [generateVideoThumbnail]);
+  }, [generateVideoThumbnail, videos]);
 
   // Efecto para inicializar Video.js cuando se selecciona un video
   useEffect(() => {
@@ -333,10 +309,18 @@ const VideoCarousel = () => {
                 <div className="video-title">
                   <h3 className="Cambio_subtitulo">{video.title}</h3>
                 </div>
-                {video.subtitles.length > 0 && (
+                {video.subtitles?.length > 0 && (
                   <div className="video-subtitle-indicator">
                     <span className="subtitle-icon">CC</span>
                   </div>
+                )}
+                {isAdmin && showDelete && (
+                  <button 
+                    className="delete-btn" 
+                    onClick={(e) => { e.stopPropagation(); confirmDelete(video.id); }}
+                  >
+                    🗑 Eliminar
+                  </button>
                 )}
               </div>
             </div>
@@ -363,7 +347,7 @@ const VideoCarousel = () => {
                 <h3 className="video-title Cambio_subtitulo2">{selectedVideo.title}</h3>
                 <div className="detail-item">
                   <span className="detail-label">Nombre:</span>
-                  <span className="detail-value">{selectedVideo.title}</span>
+                  <span className="detail-value">{selectedVideo.nombre}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Tamaño:</span>
@@ -371,7 +355,7 @@ const VideoCarousel = () => {
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Formato:</span>
-                  <span className="detail-value">{selectedVideo.format}</span>
+                  <span className="detail-value">{selectedVideo.formato}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Dimensiones:</span>
@@ -390,7 +374,7 @@ const VideoCarousel = () => {
                   >
                     {selectedVideo.audioTracks.map((track, index) => (
                       <option key={index} value={index}>
-                        {track.label}
+                        {track.idioma}
                       </option>
                     ))}
                   </select>
