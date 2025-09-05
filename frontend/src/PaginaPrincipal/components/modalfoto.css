@@ -1,0 +1,439 @@
+/* Estilos para react-slick - CORREGIDOS */
+.slick-slider {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.slick-list {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.slick-track {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.slick-slide {
+  float: left;
+  height: 100%;
+  min-height: 1px;
+  padding: 10px;
+}
+
+/* ESTILOS CORREGIDOS PARA LOS PUNTOS - Eliminación del duplicado */
+.slick-dots {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0 0 0;
+  padding: 0;
+  list-style: none;
+  position: relative;
+  bottom: 0;
+  height: 30px !important;
+}
+
+.slick-dots li {
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 50%;
+}
+
+.slick-dots li button {
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--ligth-color);
+  opacity: 0.5;
+  cursor: pointer;
+  font-size: 0;
+  transition: all 0.3s ease;
+}
+
+.slick-dots li.slick-active button {
+  background-color: var(--primary-color);
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* CustomDots.css */
+.slick-dots li button:before {
+  color: var(--ligth-color); /* Color normal */
+  opacity: 0.5;
+  font-size: 12px;
+}
+
+.slick-dots li.slick-active button:before {
+  color: var(--primary-color); /* Color cuando está activo */
+  opacity: 1;
+}
+
+/* ESTILOS CORREGIDOS PARA LAS FLECHAS */
+.slick-prev, .slick-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+  color: white;
+  cursor: pointer;
+  font-size: 0;
+  transition: all 0.3s ease;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.slick-prev:before, .slick-next:before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+}
+
+.slick-prev:before {
+  transform: rotate(135deg);
+  margin-right: -2px;
+}
+
+.slick-next:before {
+  transform: rotate(-45deg);
+  margin-left: -2px;
+}
+
+.slick-prev {
+  left: -20px;
+}
+
+.slick-next {
+  right: -20px;
+}
+
+.slick-prev:hover, .slick-next:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.slick-prev:focus, .slick-next:focus {
+  outline: none;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .slick-prev {
+    left: -10px;
+  }
+  
+  .slick-next {
+    right: -10px;
+  }
+  
+  .slick-prev, .slick-next {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Mantener los estilos originales */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.custom-slide img {
+  border-radius: 8px;
+  width: 100%;
+  height: 350px; /* Altura fija para consistencia */
+  object-fit: cover; /* Asegura que la imagen cubra el espacio */
+  transition: transform 0.3s ease;
+}
+
+.custom-slide img:hover {
+  transform: scale(1.05);
+}
+
+.custom-slide {
+  width: 300px;
+  background: var(--ligth-color);
+  color: var(--primary-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-font);
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.contendor {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* ESTILOS CORREGIDOS PARA EL MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 90%;
+  width: auto;
+  max-height: 85vh;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  animation: scaleIn 0.3s ease;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+  background: var(--primary-color);
+  transform: scale(1.1);
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.modal-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 20px;
+  margin-top: 5px;
+  min-height: 300px;
+  max-height: 50vh;
+  width: auto;
+  position: relative;
+}
+
+.modal-image {
+  width: 300px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.image-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #666;
+  font-style: italic;
+}
+
+.modal-details {
+  padding: 20px;
+  background: white;
+  border-top: 1px solid #eee;
+}
+
+.image-title {
+  margin: 0 0 15px 0;
+  color: var(--primary-color);
+  font-size: 1.3rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: var(--dark-color);
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.detail-value {
+  color: #555;
+  flex: 1;
+  text-align: right;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+/* ELIMINAR ESTILOS DE FOCO EN BOTONES DE NAVEGACIÓN */
+.slick-prev:focus, 
+.slick-next:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.slick-prev:active, 
+.slick-next:active {
+  transform: translateY(-50%) scale(0.95) !important;
+}
+
+/* Opcional: Si el problema persiste, forzar el estilo del fondo */
+.slick-prev, 
+.slick-next {
+  background-color: var(--secondary-color) !important;
+}
+
+.slick-prev:hover, 
+.slick-next:hover {
+  background-color: var(--primary-color) !important;
+}
+
+/* Para navegadores WebKit (Chrome, Safari) */
+.slick-prev::-webkit-focus-inner, 
+.slick-next::-webkit-focus-inner {
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive mejorado */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+  
+  .modal-content {
+    max-width: 95%;
+    max-height: 90vh;
+  }
+  
+  .modal-body {
+    flex-direction: column;
+  }
+  
+  .modal-image-container {
+    min-height: 250px;
+    max-height: 40vh;
+    padding: 15px;
+  }
+  
+  .modal-details {
+    padding: 15px;
+  }
+  
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+  
+  .detail-value {
+    text-align: left;
+  }
+  
+  .slick-prev {
+    left: -5px;
+  }
+  
+  .slick-next {
+    right: -5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-image-container {
+    min-height: 200px;
+    max-height: 35vh;
+    padding: 10px;
+  }
+  
+  .modal-image {
+    max-height: 35vh;
+  }
+  
+  .image-title {
+    font-size: 1.1rem;
+  }
+  
+  .detail-label, .detail-value {
+    font-size: 0.8rem;
+  }
+  
+  .custom-slide {
+    width: 250px;
+  }
+  
+  .custom-slide img {
+    height: 150px;
+  }
+}
