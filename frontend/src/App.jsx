@@ -12,16 +12,21 @@ import Header from "./PaginaPrincipal/components/header";
 import Footer from "./PaginaPrincipal/components/Footer";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuth } from "./store/AuthContext";
+import { useStyle } from "./store/StyleContext"
 import './App.css'
 
 function App() {
 
   const { checkSession } = useAuth();
+  const { loadFontFromStorage, loadPaletteFromStorage } = useStyle();
 
   useEffect(() => {
     // lo que en Vue es onMounted
     const init = async () => {
       await checkSession();
+      loadFontFromStorage();
+      loadPaletteFromStorage();
+      
     };
     init();
   }, []); // [] asegura que se ejecuta una sola vez al montar
