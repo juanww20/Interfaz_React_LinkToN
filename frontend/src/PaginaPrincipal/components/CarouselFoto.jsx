@@ -153,7 +153,7 @@ const ImageCarousel = ({ showDelete = false, isAdmin = false }) => {
                     }}
                     title="Eliminar imagen"
                   >
-                    🗑
+                    🗑 Eliminar
                   </button>
                 )}
               </div>
@@ -203,15 +203,6 @@ const ImageCarousel = ({ showDelete = false, isAdmin = false }) => {
                   <span className="detail-label">Tamaño:</span>
                   <span className="detail-value">{formatFileSize(selectedImage.size)}</span>
                 </div>
-
-                {showDelete && isAdmin && (
-                  <button
-                    className="delete-btn big"
-                    onClick={() => confirmDelete(selectedImage.image_id)}
-                  >
-                    🗑 Eliminar esta imagen
-                  </button>
-                )}
               </div>
             </div>
           </div>

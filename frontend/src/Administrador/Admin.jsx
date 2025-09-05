@@ -5,6 +5,7 @@ import UsersPanel from './Admin_componentes/DatatableComponente';
 import LoaderConfig from './Admin_componentes/LoaderConfig';
 import FotosEditar from './Admin_componentes/FotosEditar';
 import VideosEditar from './Admin_componentes/VideosEditar';
+import GaleriaEditar from './Admin_componentes/Galeria';
 import styles from './Admin.module.css';
 
 const AdminPanel = () => {
@@ -49,6 +50,12 @@ const AdminPanel = () => {
         >
           🎥 Videos
         </button>
+        <button
+          onClick={() => setActiveTab('galeriaeditar')}
+          className={`${styles.tab} ${activeTab === 'galeriaeditar' ? styles.tabActive : ''}`}
+        >
+          🖼️ Galeria
+        </button>
       </div>
 
       {activeTab === 'colors' && <ColorsPanel />}
@@ -57,6 +64,7 @@ const AdminPanel = () => {
       {activeTab === 'loaderconfig' && <LoaderConfig />}
       {activeTab === 'fotoseditar' && <FotosEditar />}
       {activeTab === 'videoseditar' && <VideosEditar />}
+      {activeTab === 'galeriaeditar' && <GaleriaEditar />}
     </div>
   );
 };

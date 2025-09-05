@@ -24,6 +24,30 @@
   margin-right: auto;
 }
 
+/* Botón eliminar como overlay */
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 0, 0, 0.85);
+  border: none;
+  color: white;
+  font-size: 16px;
+  padding: 6px 10px;
+  border-radius: 20%;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-slide:hover .delete-btn {
+  opacity: 1; /* solo se ve cuando pasas el mouse */
+}
+
+.delete-btn:hover {
+  background: red;
+}
+
 .slick-slide {
   float: left;
   height: 100%;

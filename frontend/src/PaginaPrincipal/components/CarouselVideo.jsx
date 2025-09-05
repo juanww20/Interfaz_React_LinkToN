@@ -54,6 +54,15 @@ const VideoCarousel = ({ showDelete = false, isAdmin = false }) => {
       // Aquí usas tu servicio de API para eliminar
       await videoService.deleteVideo(id);
       await fetchVideos(); // vuelve a cargar la lista
+
+      for (const video of videos.value) {
+        // Solo genera la miniatura si no la tiene ya
+        if (!video.thumbnail) {
+          const thumbnailUrl = await generateVideoThumbnail(video.path);
+          video.thumbnail = thumbnailUrl;
+        }
+      }
+
       Swal.fire("Eliminado", "El video ha sido eliminado", "success");
     } catch (err) {
       console.error(err);
@@ -139,7 +148,7 @@ const VideoCarousel = ({ showDelete = false, isAdmin = false }) => {
         src: selectedVideo.videoSrc,
         type: 'video/mp4'
       }],
-      tracks: selectedVideo.subtitles.map((subtitle, index) => ({
+      tracks: (selectedVideo.subtitles || []).map((subtitle, index) => ({
         kind: 'subtitles',
         label: subtitle.label,
         srclang: subtitle.lang,
@@ -372,7 +381,7 @@ const VideoCarousel = ({ showDelete = false, isAdmin = false }) => {
                     value={selectedAudioTrack}
                     onChange={(e) => setSelectedAudioTrack(parseInt(e.target.value))}
                   >
-                    {selectedVideo.audioTracks.map((track, index) => (
+                    {(selectedVideo.audioTracks || []).map((track, index) => (
                       <option key={index} value={index}>
                         {track.idioma}
                       </option>
