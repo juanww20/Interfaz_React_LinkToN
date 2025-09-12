@@ -30,6 +30,9 @@ const genders = ['Masculino', 'Femenino', 'Otro'];
 // Estilos
 const FormContainer = styled(Paper)(({ theme }) => ({
   maxWidth: '90%',
+  backgroundColor: 'var(--primary-color) !important',
+  borderColor: 'var(--dark-color) !important',
+    color: 'var(--ligth-color) !important',
   height: 'auto',
   margin: '20px auto',
   padding: theme.spacing(3),
@@ -40,6 +43,9 @@ const FormContainer = styled(Paper)(({ theme }) => ({
 
 const NameFields = styled(Box)(({ theme }) => ({
   display: 'flex',
+backgroundColor: 'var(--primary-color) !important',
+  borderColor: 'var(--dark-color) !important',
+    color: 'var(--ligth-color) !important',
   gap: theme.spacing(2),
   marginBottom: theme.spacing(2),
   [theme.breakpoints.down('sm')]: {
@@ -53,10 +59,16 @@ const FormActions = styled(Box)(({ theme }) => ({
   justifyContent: 'flex-end',
   gap: theme.spacing(2),
   marginTop: theme.spacing(3),
+  backgroundColor: 'var(--primary-color) !important',
+  borderColor: 'var(--dark-color) !important',
+    color: 'var(--ligth-color) !important',
 }));
 
 const ImageSection = styled(Box)(({ theme }) => ({
   display: 'flex',
+  backgroundColor: 'var(--primary-color) !important',
+  borderColor: 'var(--dark-color) !important',
+    color: 'var(--ligth-color) !important',
   marginTop: theme.spacing(2),
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
