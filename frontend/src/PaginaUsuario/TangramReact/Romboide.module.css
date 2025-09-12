@@ -1,0 +1,66 @@
+.romboideContainer {
+  width: fit-content;
+  margin: 100px auto;
+  perspective: 800px;
+  position: relative;
+}
+
+.trianglePrism {
+  position: absolute;
+  width: 120px;
+  height: 60px;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+}
+
+.flipped {
+  transform: translateY(36.5px) translateX(59px) rotateY(180deg) rotateX(180deg) translateZ(0px);
+}
+
+.face {
+  position: absolute;
+  opacity: 0.95;
+}
+
+.front {
+  width: 120px;
+  height: 60px;
+  background-color: #cab70b;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  transform: translateZ(30px) translateY(18px);
+}
+
+.back {
+  width: 120px;
+  height: 60px;
+  background-color: #cab70b;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  transform: rotateY(180deg) translateY(18px) translateZ(-18px);
+}
+
+.bottom {
+  width: 120px;
+  height: 12px;
+  background-color: #a19208;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  transform: rotateX(90deg) translateY(18px) translateZ(-78px);
+  transform-origin: top;
+}
+
+.left {
+  width: 30px;
+  height: 120px;
+  background-color: #a19208;
+  clip-path: polygon(0% 0%, 40% 0%, 41% 70%, 0% 70%);
+  transform: rotateY(90deg) translateY(-17px) rotateX(-45deg) translateX(-30px) translateZ(25px);
+  transform-origin: left;
+}
+
+.right {
+  width: 30px;
+  height: 97px;
+  background-color: #a19208;
+  clip-path: polygon(0% 0%, 40% 0%, 40% 90%, 0% 90%);
+  transform: rotateY(90deg) translateY(67px) rotateX(45deg) translateX(0px) translateZ(90px);
+  transform-origin: right;
+}
