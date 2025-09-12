@@ -74,7 +74,6 @@ const Footer = () => {
                   name="email" 
                   value={email}
                   onChange={handleEmailChange}
-                  placeholder="Your Email"
                   required 
                 />
                 <input type="submit" value="Subscribe" />

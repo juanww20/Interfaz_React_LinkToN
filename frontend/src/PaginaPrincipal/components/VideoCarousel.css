@@ -284,10 +284,14 @@
 .detail-label {
   font-weight: 600;
   color: var(--dark-color);
+  font-size: var(--text-font);
+  font-family: var(--font-secundaria);
 }
 
 .detail-value {
-  color: #666;
+  color: var(--ligth-color);
+  font-size: var(--text-font);
+  font-family: var(--font-secundaria);
 }
 
 .control-group {
