@@ -84,14 +84,50 @@ const ErrorMessage = styled(Box)(({ theme }) => ({
 }));
 
 // Componente para el paso 1
-const Step1 = ({ formData, handleInputChange, updateImagePreview, onFileSelected, imagePreviewUrl, handleNext }) => {
+const Step1 = ({ formData, handleInputChange, updateImagePreview, onFileSelected, imagePreviewUrl, handleNext, errors }) => {
   return (
     <Box component="form" sx={{ mt: 2 }}>
       <NameFields>
-        <TextField fullWidth label="Nombre*" value={formData.firstName} onChange={(e) => handleInputChange('firstName', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Apellido*" value={formData.lastName} onChange={(e) => handleInputChange('lastName', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Segundo apellido" value={formData.maidenName} onChange={(e) => handleInputChange('maidenName', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Edad*" type="number" value={formData.age} onChange={(e) => handleInputChange('age', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="Nombre*"
+          value={formData.firstName}
+          onChange={(e) => handleInputChange('firstName', e.target.value)}
+          variant="outlined"
+          size="small"
+          error={!!errors.firstName}
+          helperText={errors.firstName}
+        />
+        <TextField
+          fullWidth
+          label="Apellido*"
+          value={formData.lastName}
+          onChange={(e) => handleInputChange('lastName', e.target.value)}
+          variant="outlined"
+          size="small"
+          error={!!errors.lastName}
+          helperText={errors.lastName}
+        />
+        <TextField
+          fullWidth
+          label="Segundo apellido"
+          value={formData.maidenName}
+          onChange={(e) => handleInputChange('maidenName', e.target.value)}
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Edad*"
+          type="number"
+          value={formData.age}
+          onChange={(e) => handleInputChange('age', e.target.value)}
+          variant="outlined"
+          size="small"
+          error={!!errors.age}
+          helperText={errors.age}
+          inputProps={{ min: 1, max: 120 }}
+        />
       </NameFields>
 
       <NameFields>
@@ -103,9 +139,39 @@ const Step1 = ({ formData, handleInputChange, updateImagePreview, onFileSelected
             ))}
           </Select>
         </FormControl>
-        <TextField fullWidth label="Fecha de nacimiento*" placeholder="ddMMyyyy (Ej: 01072005)" value={formData.birthDate} onChange={(e) => handleInputChange('birthDate', e.target.value)} variant="outlined" size="small" inputProps={{ maxLength: 8 }} helperText="Formato: ddMMyyyy" />
-        <TextField fullWidth label="Grupo sanguíneo" value={formData.bloodGroup} onChange={(e) => handleInputChange('bloodGroup', e.target.value)} variant="outlined" size="small" inputProps={{ maxLength: 3 }} />
-        <TextField fullWidth label="Altura (cm)" type="number" value={formData.height} onChange={(e) => handleInputChange('height', e.target.value)} variant="outlined" size="small" inputProps={{ maxLength: 3 }} />
+        <TextField
+          fullWidth
+          label="Fecha de nacimiento*"
+          placeholder="ddMMyyyy (Ej: 01072005)"
+          value={formData.birthDate}
+          onChange={(e) => handleInputChange('birthDate', e.target.value)}
+          variant="outlined"
+          size="small"
+          inputProps={{ maxLength: 8 }}
+          helperText={errors.birthDate || "Formato: ddMMyyyy"}
+          error={!!errors.birthDate}
+        />
+        <TextField
+          fullWidth
+          label="Grupo sanguíneo"
+          value={formData.bloodGroup}
+          onChange={(e) => handleInputChange('bloodGroup', e.target.value)}
+          variant="outlined"
+          size="small"
+          inputProps={{ maxLength: 3 }}
+        />
+        <TextField
+          fullWidth
+          label="Altura (cm)"
+          type="number"
+          value={formData.height}
+          onChange={(e) => handleInputChange('height', e.target.value)}
+          variant="outlined"
+          size="small"
+          inputProps={{ min: 30, max: 250 }}
+          error={!!errors.height}
+          helperText={errors.height}
+        />
       </NameFields>
 
       <NameFields>
@@ -149,13 +215,41 @@ const Step1 = ({ formData, handleInputChange, updateImagePreview, onFileSelected
 };
 
 // Componente para el paso 2
-const Step2 = ({ formData, handleInputChange, handleBack, handleNext }) => {
+const Step2 = ({ formData, handleInputChange, handleBack, handleNext, errors }) => {
   return (
     <Box component="form" sx={{ mt: 2 }}>
       <NameFields>
-        <TextField fullWidth label="Correo Electrónico" value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Contraseña" type="password" value={formData.password} onChange={(e) => handleInputChange('password', e.target.value)} variant="outlined" size="small" inputProps={{ maxLength: 15 }} />
-        <TextField fullWidth label="Telefono" value={formData.phone} onChange={(e) => handleInputChange('phone', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="Correo Electrónico"
+          value={formData.email}
+          onChange={(e) => handleInputChange('email', e.target.value)}
+          variant="outlined"
+          size="small"
+          error={!!errors.email}
+          helperText={errors.email}
+        />
+        <TextField
+          fullWidth
+          label="Contraseña"
+          type="password"
+          value={formData.password}
+          onChange={(e) => handleInputChange('password', e.target.value)}
+          variant="outlined"
+          size="small"
+          error={!!errors.password}
+          helperText={errors.password}
+        />
+        <TextField
+          fullWidth
+          label="Telefono"
+          value={formData.phone}
+          onChange={(e) => handleInputChange('phone', e.target.value)}
+          variant="outlined"
+          size="small"
+          error={!!errors.phone}
+          helperText={errors.phone}
+        />
         <TextField fullWidth label="Usuario" value={formData.user_name} onChange={(e) => handleInputChange('user_name', e.target.value)} variant="outlined" size="small" />
         <TextField fullWidth label="IP" value={formData.ip} onChange={(e) => handleInputChange('ip', e.target.value)} variant="outlined" size="small" />
       </NameFields>
@@ -313,12 +407,31 @@ const Step3 = ({ formData, handleInputChange, handleBack, handleNext }) => {
   );
 };
 // Componente para el paso 4
-const Step4 = ({ formData, handleInputChange, handleBack, handleNext }) => {
+const Step4 = ({ formData, handleInputChange, handleBack, handleNext, errors }) => {
   return (
     <Box component="form" sx={{ mt: 2 }}>
       <NameFields>
-        <TextField fullWidth label="Vencimiento tarjeta" value={formData.bank_cardExpire} onChange={(e) => handleInputChange('bank_cardExpire', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Número de tarjeta" value={formData.bank_cardNumber} onChange={(e) => handleInputChange('bank_cardNumber', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="Vencimiento tarjeta"
+          value={formData.bank_cardExpire}
+          onChange={(e) => handleInputChange('bank_cardExpire', e.target.value)}
+          variant="outlined"
+          size="small"
+          placeholder="MM/YY"
+          error={!!errors.bank_cardExpire}
+          helperText={errors.bank_cardExpire || "Formato: MM/YY"}
+        />
+        <TextField
+          fullWidth
+          label="Número de tarjeta"
+          value={formData.bank_cardNumber}
+          onChange={(e) => handleInputChange('bank_cardNumber', e.target.value)}
+          variant="outlined"
+          size="small"
+          error={!!errors.bank_cardNumber}
+          helperText={errors.bank_cardNumber}
+        />
         <TextField fullWidth label="Tipo de tarjeta" value={formData.bank_cardType} onChange={(e) => handleInputChange('bank_cardType', e.target.value)} variant="outlined" size="small" />
         <TextField fullWidth label="Moneda" value={formData.bank_currency} onChange={(e) => handleInputChange('bank_currency', e.target.value)} variant="outlined" size="small" />
       </NameFields>
@@ -565,6 +678,53 @@ const Step6 = ({ handleBack, handleSubmit, missingRequiredFields, submitAttempte
 const MultiStepForm = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  // Validation functions
+  const validateEmail = useCallback((email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }, []);
+
+  const validatePassword = useCallback((password) => {
+    return password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password);
+  }, []);
+
+  const validatePhone = useCallback((phone) => {
+    const phoneRegex = /^\+?[\d\s-]{10,}$/;
+    return phoneRegex.test(phone);
+  }, []);
+
+  const validateBirthDate = useCallback((date) => {
+    if (date.length !== 8) return false;
+    const day = parseInt(date.substring(0, 2));
+    const month = parseInt(date.substring(2, 4));
+    const year = parseInt(date.substring(4, 8));
+    const birthDate = new Date(year, month - 1, day);
+    return birthDate instanceof Date && !isNaN(birthDate) &&
+           day === birthDate.getDate() &&
+           month === (birthDate.getMonth() + 1) &&
+           year === birthDate.getFullYear() &&
+           birthDate < new Date();
+  }, []);
+
+  const validateNumeric = useCallback((value, min, max) => {
+    const num = Number(value);
+    return !isNaN(num) && num >= min && num <= max;
+  }, []);
+
+  const validateCardNumber = useCallback((number) => {
+    return /^\d{16}$/.test(number.replace(/\s/g, ''));
+  }, []);
+
+  const validateCardExpiry = useCallback((expiry) => {
+    const regex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+    if (!regex.test(expiry)) return false;
+    
+    const [month, year] = expiry.split('/');
+    const expDate = new Date(2000 + parseInt(year), parseInt(month) - 1);
+    return expDate > new Date();
+  }, []);
   const [formData, setFormData] = useState({
     // Paso 1
     firstName: '',
@@ -638,7 +798,81 @@ const MultiStepForm = () => {
       ...prev,
       [field]: value
     }));
-  }, []);
+
+    // Clear previous error for this field
+    setErrors(prev => ({
+      ...prev,
+      [field]: ''
+    }));
+
+    // Validate based on field type
+    switch (field) {
+      case 'email':
+        if (value && !validateEmail(value)) {
+          setErrors(prev => ({
+            ...prev,
+            email: 'Correo electrónico inválido'
+          }));
+        }
+        break;
+      case 'password':
+        if (value && !validatePassword(value)) {
+          setErrors(prev => ({
+            ...prev,
+            password: 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número'
+          }));
+        }
+        break;
+      case 'phone':
+        if (value && !validatePhone(value)) {
+          setErrors(prev => ({
+            ...prev,
+            phone: 'Número de teléfono inválido'
+          }));
+        }
+        break;
+      case 'birthDate':
+        if (value && !validateBirthDate(value)) {
+          setErrors(prev => ({
+            ...prev,
+            birthDate: 'Fecha inválida (formato: ddMMyyyy)'
+          }));
+        }
+        break;
+      case 'age':
+        if (value && !validateNumeric(value, 1, 120)) {
+          setErrors(prev => ({
+            ...prev,
+            age: 'Edad debe estar entre 1 y 120'
+          }));
+        }
+        break;
+      case 'height':
+        if (value && !validateNumeric(value, 30, 250)) {
+          setErrors(prev => ({
+            ...prev,
+            height: 'Altura debe estar entre 30 y 250 cm'
+          }));
+        }
+        break;
+      case 'bank_cardNumber':
+        if (value && !validateCardNumber(value)) {
+          setErrors(prev => ({
+            ...prev,
+            bank_cardNumber: 'Número de tarjeta inválido (16 dígitos)'
+          }));
+        }
+        break;
+      case 'bank_cardExpire':
+        if (value && !validateCardExpiry(value)) {
+          setErrors(prev => ({
+            ...prev,
+            bank_cardExpire: 'Fecha de vencimiento inválida (MM/YY)'
+          }));
+        }
+        break;
+    }
+  }, [validateEmail, validatePassword, validatePhone, validateBirthDate, validateNumeric, validateCardNumber, validateCardExpiry]);
 
   const onFileSelected = useCallback((event) => {
     const file = event.target.files[0];
@@ -661,9 +895,74 @@ const MultiStepForm = () => {
     handleInputChange('imageUrl', url);
   }, [handleInputChange]);
 
+  const validateStep = useCallback((step, data) => {
+    const errors = {};
+    let hasErrors = false;
+
+    switch (step) {
+      case 0:
+        if (!data.firstName) {
+          errors.firstName = 'El nombre es requerido';
+          hasErrors = true;
+        }
+        if (!data.lastName) {
+          errors.lastName = 'El apellido es requerido';
+          hasErrors = true;
+        }
+        if (!data.age) {
+          errors.age = 'La edad es requerida';
+          hasErrors = true;
+        } else if (!validateNumeric(data.age, 1, 120)) {
+          errors.age = 'Edad debe estar entre 1 y 120';
+          hasErrors = true;
+        }
+        if (!data.birthDate) {
+          errors.birthDate = 'La fecha de nacimiento es requerida';
+          hasErrors = true;
+        } else if (!validateBirthDate(data.birthDate)) {
+          errors.birthDate = 'Fecha inválida (formato: ddMMyyyy)';
+          hasErrors = true;
+        }
+        break;
+
+      case 1:
+        if (data.email && !validateEmail(data.email)) {
+          errors.email = 'Correo electrónico inválido';
+          hasErrors = true;
+        }
+        if (data.password && !validatePassword(data.password)) {
+          errors.password = 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número';
+          hasErrors = true;
+        }
+        if (data.phone && !validatePhone(data.phone)) {
+          errors.phone = 'Número de teléfono inválido';
+          hasErrors = true;
+        }
+        break;
+
+      case 3:
+        if (data.bank_cardNumber && !validateCardNumber(data.bank_cardNumber)) {
+          errors.bank_cardNumber = 'Número de tarjeta inválido (16 dígitos)';
+          hasErrors = true;
+        }
+        if (data.bank_cardExpire && !validateCardExpiry(data.bank_cardExpire)) {
+          errors.bank_cardExpire = 'Fecha de vencimiento inválida (MM/YY)';
+          hasErrors = true;
+        }
+        break;
+    }
+
+    return { errors, hasErrors };
+  }, [validateEmail, validatePassword, validatePhone, validateBirthDate, validateNumeric, validateCardNumber, validateCardExpiry]);
+
   const handleNext = useCallback(() => {
-    setActiveStep(prevStep => prevStep + 1);
-  }, []);
+    const { errors, hasErrors } = validateStep(activeStep, formData);
+    setErrors(errors);
+
+    if (!hasErrors) {
+      setActiveStep(prevStep => prevStep + 1);
+    }
+  }, [activeStep, formData, validateStep]);
 
   const handleBack = useCallback(() => {
     setActiveStep(prevStep => prevStep - 1);
@@ -755,6 +1054,7 @@ const MultiStepForm = () => {
             onFileSelected={onFileSelected}
             imagePreviewUrl={imagePreviewUrl}
             handleNext={handleNext}
+            errors={errors}
           />
         );
       case 1:
@@ -764,6 +1064,7 @@ const MultiStepForm = () => {
             handleInputChange={handleInputChange}
             handleBack={handleBack}
             handleNext={handleNext}
+            errors={errors}
           />
         );
       case 2:
@@ -782,6 +1083,7 @@ const MultiStepForm = () => {
             handleInputChange={handleInputChange}
             handleBack={handleBack}
             handleNext={handleNext}
+            errors={errors}
           />
         );
       case 4:
