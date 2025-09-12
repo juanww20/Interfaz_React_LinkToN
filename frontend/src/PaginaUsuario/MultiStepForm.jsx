@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Stepper,
   Step,
@@ -19,14 +19,12 @@ import {
   ListItemIcon,
   ListItemText
 } from '@mui/material';
+import Swal from 'sweetalert2';
 import { styled } from '@mui/material/styles';
 import WarningIcon from '@mui/icons-material/Warning';
-
+import { userService } from '../services/project_2/userService';
+import MapModal from './Map/MapModal';
 const genders = ['Masculino', 'Femenino', 'Otro'];
-const cardTypes = ['Visa', 'MasterCard', 'American Express', 'Other'];
-const currencies = ['USD', 'EUR', 'GBP', 'JPY', 'MXN'];
-const cryptoCurrencies = ['Bitcoin', 'Ethereum', 'BNB', 'XRP', 'Cardano', 'Solana'];
-const cryptoNetworks = ['Bitcoin', 'Ethereum', 'Binance Smart Chain', 'Polygon', 'Solana'];
 
 // Estilos
 const FormContainer = styled(Paper)(({ theme }) => ({
@@ -118,8 +116,16 @@ const Step1 = ({ formData, handleInputChange, updateImagePreview, onFileSelected
       </NameFields>
 
       <ImageSection>
-        <TextField fullWidth label="URL de imagen" value={formData.imageUrl} onChange={(e) => updateImagePreview(e.target.value)} variant="outlined" size="small" sx={{ mr: 2 }} />
-      </ImageSection>
+        <TextField
+          fullWidth
+          label="URL de imagen"
+          value={formData.imageUrl || ""}
+          onChange={(e) => updateImagePreview(e.target.value)}
+          variant="outlined"
+          size="small"
+          sx={{ mr: 2 }}
+        />      
+        </ImageSection>
 
       <ImagePreviewContainer>
         <Button variant="outlined" component="label" startIcon={<span>📷</span>} sx={{ minWidth: '200px' }}>
@@ -150,7 +156,7 @@ const Step2 = ({ formData, handleInputChange, handleBack, handleNext }) => {
         <TextField fullWidth label="Correo Electrónico" value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} variant="outlined" size="small" />
         <TextField fullWidth label="Contraseña" type="password" value={formData.password} onChange={(e) => handleInputChange('password', e.target.value)} variant="outlined" size="small" inputProps={{ maxLength: 15 }} />
         <TextField fullWidth label="Telefono" value={formData.phone} onChange={(e) => handleInputChange('phone', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Usuario" value={formData.username} onChange={(e) => handleInputChange('username', e.target.value)} variant="outlined" size="small" />
+        <TextField fullWidth label="Usuario" value={formData.user_name} onChange={(e) => handleInputChange('user_name', e.target.value)} variant="outlined" size="small" />
         <TextField fullWidth label="IP" value={formData.ip} onChange={(e) => handleInputChange('ip', e.target.value)} variant="outlined" size="small" />
       </NameFields>
 
@@ -169,83 +175,159 @@ const Step2 = ({ formData, handleInputChange, handleBack, handleNext }) => {
 
 // Componente para el paso 3
 const Step3 = ({ formData, handleInputChange, handleBack, handleNext }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenMap = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseMap = (data) => {
+    setIsModalOpen(false);
+    if (data) {
+      // Llenar los campos del formulario con la ubicación seleccionada
+      handleInputChange("address_address", data.adress || "");
+      handleInputChange("address_city", data.city || "");
+      handleInputChange("address_state", data.state || "");
+      handleInputChange("address_postalCode", data.postcode || "");
+      handleInputChange("address_country", data.country || "");
+      handleInputChange("address_coordinates_lat", data.lat || "");
+      handleInputChange("address_coordinates_lng", data.lng || "");
+      handleInputChange("university", data.university || "");
+    }
+  };
+
   return (
     <Box component="form" sx={{ mt: 2 }}>
       <NameFields>
-        <TextField fullWidth label="Dirección" value={formData.address} onChange={(e) => handleInputChange('address', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Ciudad" value={formData.city} onChange={(e) => handleInputChange('city', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Estado" value={formData.state} onChange={(e) => handleInputChange('state', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="Dirección"
+          value={formData.address_address}
+          onChange={(e) =>
+            handleInputChange("address_address", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Ciudad"
+          value={formData.address_city}
+          onChange={(e) => handleInputChange("address_city", e.target.value)}
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Estado"
+          value={formData.address_state}
+          onChange={(e) => handleInputChange("address_state", e.target.value)}
+          variant="outlined"
+          size="small"
+        />
       </NameFields>
 
       <NameFields>
-        <TextField fullWidth label="Código postal" value={formData.postalCode} onChange={(e) => handleInputChange('postalCode', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Código estado" value={formData.stateCode} onChange={(e) => handleInputChange('stateCode', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Latitud" value={formData.latitude} onChange={(e) => handleInputChange('latitude', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Longitud" value={formData.longitude} onChange={(e) => handleInputChange('longitude', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="Código postal"
+          value={formData.address_postalCode}
+          onChange={(e) =>
+            handleInputChange("address_postalCode", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Código estado"
+          value={formData.address_stateCode}
+          onChange={(e) =>
+            handleInputChange("address_stateCode", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Latitud"
+          value={formData.address_coordinates_lat}
+          onChange={(e) =>
+            handleInputChange("address_coordinates_lat", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Longitud"
+          value={formData.address_coordinates_lng}
+          onChange={(e) =>
+            handleInputChange("address_coordinates_lng", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
       </NameFields>
 
       <NameFields>
-        <TextField fullWidth label="País" value={formData.country} onChange={(e) => handleInputChange('country', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Universidad" value={formData.university} onChange={(e) => handleInputChange('university', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="País"
+          value={formData.address_country}
+          onChange={(e) => handleInputChange("address_country", e.target.value)}
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Universidad"
+          value={formData.university}
+          onChange={(e) => handleInputChange("university", e.target.value)}
+          variant="outlined"
+          size="small"
+        />
       </NameFields>
+
+      {/* Botón para abrir el mapa */}
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleOpenMap}
+        >
+          Seleccionar ubicación en mapa
+        </Button>
+      </Box>
+
+      {/* Modal con el mapa */}
+      {isModalOpen && <MapModal onClose={handleCloseMap} />}
 
       <FormActions>
         <Button onClick={handleBack}>Atrás</Button>
-        <Button color="primary" onClick={handleNext} variant="contained">Siguiente</Button>
+        <Button color="primary" onClick={handleNext} variant="contained">
+          Siguiente
+        </Button>
       </FormActions>
     </Box>
   );
 };
-
 // Componente para el paso 4
 const Step4 = ({ formData, handleInputChange, handleBack, handleNext }) => {
   return (
     <Box component="form" sx={{ mt: 2 }}>
       <NameFields>
-        <TextField fullWidth label="Vencimiento tarjeta" value={formData.cardExpiration} onChange={(e) => handleInputChange('cardExpiration', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Número de tarjeta" value={formData.cardNumber} onChange={(e) => handleInputChange('cardNumber', e.target.value)} variant="outlined" size="small" />
-
-        <FormControl fullWidth variant="outlined" size="small">
-          <InputLabel>Tipo de tarjeta</InputLabel>
-          <Select value={formData.cardType} onChange={(e) => handleInputChange('cardType', e.target.value)} label="Tipo de tarjeta">
-            {cardTypes.map((type) => (
-              <MenuItem key={type} value={type}>{type}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl fullWidth variant="outlined" size="small">
-          <InputLabel>Moneda</InputLabel>
-          <Select value={formData.currency} onChange={(e) => handleInputChange('currency', e.target.value)} label="Moneda">
-            {currencies.map((currency) => (
-              <MenuItem key={currency} value={currency}>{currency}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <TextField fullWidth label="Vencimiento tarjeta" value={formData.bank_cardExpire} onChange={(e) => handleInputChange('bank_cardExpire', e.target.value)} variant="outlined" size="small" />
+        <TextField fullWidth label="Número de tarjeta" value={formData.bank_cardNumber} onChange={(e) => handleInputChange('bank_cardNumber', e.target.value)} variant="outlined" size="small" />
+        <TextField fullWidth label="Tipo de tarjeta" value={formData.bank_cardType} onChange={(e) => handleInputChange('bank_cardType', e.target.value)} variant="outlined" size="small" />
+        <TextField fullWidth label="Moneda" value={formData.bank_currency} onChange={(e) => handleInputChange('bank_currency', e.target.value)} variant="outlined" size="small" />
       </NameFields>
 
       <NameFields>
-        <TextField fullWidth label="IBAN" value={formData.iban} onChange={(e) => handleInputChange('iban', e.target.value)} variant="outlined" size="small" />
-
-        <FormControl fullWidth variant="outlined" size="small">
-          <InputLabel>Criptomoneda</InputLabel>
-          <Select value={formData.cryptocurrency} onChange={(e) => handleInputChange('cryptocurrency', e.target.value)} label="Criptomoneda">
-            {cryptoCurrencies.map((crypto) => (
-              <MenuItem key={crypto} value={crypto}>{crypto}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <TextField fullWidth label="Wallet" value={formData.wallet} onChange={(e) => handleInputChange('wallet', e.target.value)} variant="outlined" size="small" />
-
-        <FormControl fullWidth variant="outlined" size="small">
-          <InputLabel>Red cripto</InputLabel>
-          <Select value={formData.cryptoNetwork} onChange={(e) => handleInputChange('cryptoNetwork', e.target.value)} label="Red cripto">
-            {cryptoNetworks.map((network) => (
-              <MenuItem key={network} value={network}>{network}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <TextField fullWidth label="IBAN" value={formData.bank_iban} onChange={(e) => handleInputChange('bank_iban', e.target.value)} variant="outlined" size="small" />
+        <TextField fullWidth label="Criptomoneda" value={formData.crypto_coin} onChange={(e) => handleInputChange('crypto_coin', e.target.value)} variant="outlined" size="small" />
+        <TextField fullWidth label="Wallet" value={formData.crypto_wallet} onChange={(e) => handleInputChange('crypto_wallet', e.target.value)} variant="outlined" size="small" />
+        <TextField fullWidth label="Red cripto" value={formData.crypto_network} onChange={(e) => handleInputChange('crypto_network', e.target.value)} variant="outlined" size="small" />
       </NameFields>
 
       <FormActions>
@@ -258,67 +340,195 @@ const Step4 = ({ formData, handleInputChange, handleBack, handleNext }) => {
 
 // Componente para el paso 5
 const Step5 = ({ formData, handleInputChange, handleBack, handleNext }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenMap = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseMap = (data) => {
+    setIsModalOpen(false);
+    if (data) {
+      // Rellenar los campos de la empresa con la ubicación seleccionada
+      handleInputChange("company_address_address", data.adress || "");
+      handleInputChange("company_address_city", data.city || "");
+      handleInputChange("company_address_state", data.state || "");
+      handleInputChange("company_address_postalCode", data.postcode || "");
+      handleInputChange("company_address_country", data.country || "");
+      handleInputChange("company_address_coordinates_lat", data.lat || "");
+      handleInputChange("company_address_coordinates_lng", data.lng || "");
+    }
+  };
+
   return (
     <Box component="form" sx={{ mt: 2 }}>
       <NameFields>
-        <TextField fullWidth label="Departamento" value={formData.department} onChange={(e) => handleInputChange('department', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Empresa" value={formData.company} onChange={(e) => handleInputChange('company', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Cargo" value={formData.position} onChange={(e) => handleInputChange('position', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="Departamento"
+          value={formData.company_department}
+          onChange={(e) =>
+            handleInputChange("company_department", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Empresa"
+          value={formData.company_name}
+          onChange={(e) => handleInputChange("company_name", e.target.value)}
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Cargo"
+          value={formData.company_title}
+          onChange={(e) => handleInputChange("company_title", e.target.value)}
+          variant="outlined"
+          size="small"
+        />
       </NameFields>
 
       <NameFields>
-        <TextField fullWidth label="Dirección empresa" value={formData.companyAddress} onChange={(e) => handleInputChange('companyAddress', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Ciudad empresa" value={formData.companyCity} onChange={(e) => handleInputChange('companyCity', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Estado empresa" value={formData.companyState} onChange={(e) => handleInputChange('companyState', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Código estado empresa" value={formData.companyStateCode} onChange={(e) => handleInputChange('companyStateCode', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="Dirección empresa"
+          value={formData.company_address_address}
+          onChange={(e) =>
+            handleInputChange("company_address_address", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Ciudad empresa"
+          value={formData.company_address_city}
+          onChange={(e) =>
+            handleInputChange("company_address_city", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Estado empresa"
+          value={formData.company_address_state}
+          onChange={(e) =>
+            handleInputChange("company_address_state", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Código estado empresa"
+          value={formData.company_address_stateCode}
+          onChange={(e) =>
+            handleInputChange("company_address_stateCode", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
       </NameFields>
 
       <NameFields>
-        <TextField fullWidth label="Código postal empresa" value={formData.companyPostalCode} onChange={(e) => handleInputChange('companyPostalCode', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Latitud empresa" value={formData.companyLatitude} onChange={(e) => handleInputChange('companyLatitude', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="Longitud empresa" value={formData.companyLongitude} onChange={(e) => handleInputChange('companyLongitude', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="País empresa" value={formData.companyCountry} onChange={(e) => handleInputChange('companyCountry', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="Código postal empresa"
+          value={formData.company_address_postalCode}
+          onChange={(e) =>
+            handleInputChange("company_address_postalCode", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Latitud empresa"
+          value={formData.company_address_coordinates_lat}
+          onChange={(e) =>
+            handleInputChange(
+              "company_address_coordinates_lat",
+              e.target.value
+            )
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="Longitud empresa"
+          value={formData.company_address_coordinates_lng}
+          onChange={(e) =>
+            handleInputChange(
+              "company_address_coordinates_lng",
+              e.target.value
+            )
+          }
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="País empresa"
+          value={formData.company_address_country}
+          onChange={(e) =>
+            handleInputChange("company_address_country", e.target.value)
+          }
+          variant="outlined"
+          size="small"
+        />
       </NameFields>
 
       <NameFields>
-        <TextField fullWidth label="EIN" value={formData.ein} onChange={(e) => handleInputChange('ein', e.target.value)} variant="outlined" size="small" />
-        <TextField fullWidth label="SSN" value={formData.ssn} onChange={(e) => handleInputChange('ssn', e.target.value)} variant="outlined" size="small" />
+        <TextField
+          fullWidth
+          label="EIN"
+          value={formData.ein}
+          onChange={(e) => handleInputChange("ein", e.target.value)}
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          fullWidth
+          label="SSN"
+          value={formData.ssn}
+          onChange={(e) => handleInputChange("ssn", e.target.value)}
+          variant="outlined"
+          size="small"
+        />
       </NameFields>
+
+      {/* Botón para abrir el mapa */}
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleOpenMap}
+        >
+          Seleccionar ubicación de la empresa en mapa
+        </Button>
+      </Box>
+
+      {/* Modal con el mapa */}
+      {isModalOpen && <MapModal onClose={handleCloseMap} />}
 
       <FormActions>
         <Button onClick={handleBack}>Atrás</Button>
-        <Button color="primary" onClick={handleNext} variant="contained">Siguiente</Button>
+        <Button color="primary" onClick={handleNext} variant="contained">
+          Siguiente
+        </Button>
       </FormActions>
     </Box>
   );
 };
-
 // Componente para el paso 6
-const Step6 = ({ formData, handleInputChange, handleBack, handleSubmit, missingRequiredFields, submitAttempted }) => {
+const Step6 = ({ handleBack, handleSubmit, missingRequiredFields, submitAttempted }) => {
   return (
     <Box component="form" sx={{ mt: 2 }}>
-      <TextField
-        fullWidth
-        label="Dirección*"
-        value={formData.address}
-        onChange={(e) => handleInputChange('address', e.target.value)}
-        variant="outlined"
-        size="small"
-        sx={{ mb: 2 }}
-        error={submitAttempted && !formData.address}
-        helperText={submitAttempted && !formData.address ? 'Campo obligatorio' : ''}
-      />
-
-      <TextField
-        fullWidth
-        label="Ciudad"
-        value={formData.city}
-        onChange={(e) => handleInputChange('city', e.target.value)}
-        variant="outlined"
-        size="small"
-        sx={{ mb: 2 }}
-      />
-
       {/* Mensaje de error global */}
       {submitAttempted && missingRequiredFields.length > 0 && (
         <ErrorMessage>
@@ -376,42 +586,44 @@ const MultiStepForm = () => {
     email: '',
     password: '',
     phone: '',
-    username: '',
+    user_name: '',
     ip: '',
     macAddress: '',
     userAgent: '',
 
     // Paso 3
-    address: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    stateCode: '',
-    latitude: '',
-    longitude: '',
-    country: '',
+    address_address: '',
+    address_city: '',
+    address_state: '',
+    address_postalCode: '',
+    address_stateCode: '',
+    address_coordinates_lat: '',
+    address_coordinates_lng: '',
+    address_country: '',
     university: '',
 
     // Paso 4
-    cardExpiration: '',
-    cardNumber: '',
-    cardType: '',
-    currency: '',
-    iban: '',
-    cryptocurrency: '',
-    wallet: '',
-    cryptoNetwork: '',
+    bank_cardExpire: '',
+    bank_cardNumber: '',
+    bank_cardType: '',
+    bank_currency: '',
+    bank_iban: '',
+    crypto_coin: '',
+    crypto_network: '',
+    crypto_wallet: '',
 
     // Paso 5
-    department: '',
-    company: '',
-    position: '',
-    companyAddress: '',
-    companyCity: '',
-    companyState: '',
-    companyStateCode: '',
-    companyPostalCode: '',
-    companyLatitude: '',
+    company_department: '',
+    company_name: '',
+    company_title: '',
+    company_address_address: '',
+    company_address_city: '',
+    company_address_state: '',
+    company_address_stateCode: '',
+    company_address_postalCode: '',
+    company_address_coordinates_lat: '',
+    company_address_coordinates_lng: '',
+    company_address_country: '',
     companyLongitude: '',
     companyCountry: '',
     ein: '',
@@ -464,7 +676,6 @@ const MultiStepForm = () => {
       { field: 'age', label: 'Edad' },
       { field: 'gender', label: 'Género' },
       { field: 'birthDate', label: 'Fecha de nacimiento' },
-      { field: 'address', label: 'Dirección' }
     ];
 
     const missing = requiredFields
@@ -475,12 +686,60 @@ const MultiStepForm = () => {
     return missing.length === 0;
   }, [formData]);
 
-  const handleSubmit = useCallback(() => {
+  async function LoadThisUserData() {
+      try {
+          const userId = await userService.getUserID();
+          const UserData = await userService.getUserById(userId);
+          return UserData.data;
+        } catch (error) {
+          console.error("Error fetching user ID:", error);
+      }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await LoadThisUserData();
+      // Aquí actualizas el estado con los datos recibidos
+      setFormData(data);
+    };
+    fetchData();
+  }, []); 
+
+
+  const handleSubmit = useCallback(async () => {
     setSubmitAttempted(true);
+    const userId = await userService.getUserID();
     if (checkRequiredFields()) {
-      // Aquí iría la lógica para enviar el formulario
-      console.log('Formulario enviado:', formData);
-      alert('Formulario enviado con éxito');
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¿Deseas enviar el formulario?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, enviar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log('Enviando datos del formulario:', formData, userId);
+          // Campos que deben ser numéricos
+          const numericFields = [
+            'age', 'height', 'weight', 'latitude', 'longitude',
+            'companyLatitude', 'companyLongitude'
+          ];
+          // Filtrar y convertir los campos
+          const filteredData = Object.fromEntries(
+            Object.entries(formData)
+              // eslint-disable-next-line no-unused-vars
+              .filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+              .map(([k, v]) =>
+                numericFields.includes(k)
+                  ? [k, isNaN(Number(v)) ? v : Number(v)]
+                  : [k, v]
+              )
+          );
+          userService.updateUser(userId, filteredData);
+          Swal.fire('¡Enviado!', 'Formulario enviado con éxito', 'success');
+        }
+      });
     }
   }, [checkRequiredFields, formData]);
 

@@ -90,7 +90,7 @@ export const userService = {
     try {
       const res = await api.get('/auth/me')
       return { status: true, data: res.data.data }
-    } catch (error) {
+    } catch (error : any) {
       if (error.response?.status === 401) {
         // No logueado
         return { status: false }

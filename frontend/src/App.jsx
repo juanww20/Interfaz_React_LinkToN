@@ -14,6 +14,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuth } from "./store/AuthContext";
 import { useStyle } from "./store/StyleContext"
 import './App.css'
+import LoaderOverlay from './PaginaUsuario/Tangram/LoaderAnimation';
 
 function App() {
 
@@ -34,7 +35,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-
+      <LoaderOverlay />
       <Routes>
         {/* Públicas */}
         <Route path="/" element={<Principal />} />
