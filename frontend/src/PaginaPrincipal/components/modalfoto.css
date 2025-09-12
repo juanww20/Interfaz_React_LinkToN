@@ -332,15 +332,15 @@
   font-weight: 600;
   color: var(--dark-color);
   flex: 1;
-  font-size: 0.9rem;
+  font-size: var(--text-font)
 }
 
 .detail-value {
-  color: #555;
+  color: var(--ligth-color);
+  font-size: var(--text-font);
+  font-family: var(--font-secundaria);
   flex: 1;
   text-align: right;
-  font-family: monospace;
-  font-size: 0.9rem;
 }
 
 /* ELIMINAR ESTILOS DE FOCO EN BOTONES DE NAVEGACIÓN */
@@ -446,11 +446,12 @@
   }
   
   .image-title {
-    font-size: 1.1rem;
+    font-size: var(--text-font);
   }
   
   .detail-label, .detail-value {
-    font-size: 0.8rem;
+    font-size: var(--text-font);
+    font-family: var(--font-secundaria);
   }
   
   .custom-slide {
