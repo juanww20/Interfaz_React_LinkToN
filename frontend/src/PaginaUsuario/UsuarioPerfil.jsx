@@ -6,9 +6,7 @@ import { userService } from '../services/project_2/userService';
 async function LoadThisUserData() {
     try {
         const userId = await userService.getUserID();
-        console.log("User ID:", userId);
         const UserData = await userService.getUserById(userId);
-        console.log("User Data:", UserData);
         return UserData.data;
     } catch (error) {
         console.error("Error fetching user ID:", error);
