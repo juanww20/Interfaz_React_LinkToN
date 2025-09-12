@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import bcryptjs from 'bcryptjs';
 import {
   Stepper,
   Step,
@@ -1016,7 +1017,7 @@ const MultiStepForm = () => {
         showCancelButton: true,
         confirmButtonText: 'Sí, enviar',
         cancelButtonText: 'Cancelar',
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           console.log('Enviando datos del formulario:', formData, userId);
           // Campos que deben ser numéricos
@@ -1024,9 +1025,19 @@ const MultiStepForm = () => {
             'age', 'height', 'weight', 'latitude', 'longitude',
             'companyLatitude', 'companyLongitude'
           ];
+
+          // Crear copia de los datos para no modificar el estado original
+          let dataToSend = {...formData};
+
+          // Si hay contraseña, encriptarla con bcrypt
+          if (dataToSend.password) {
+            const salt = await bcryptjs.genSalt(10);
+            dataToSend.password = await bcryptjs.hash(dataToSend.password, salt);
+          }
+
           // Filtrar y convertir los campos
           const filteredData = Object.fromEntries(
-            Object.entries(formData)
+            Object.entries(dataToSend)
               // eslint-disable-next-line no-unused-vars
               .filter(([_, v]) => v !== '' && v !== null && v !== undefined)
               .map(([k, v]) =>

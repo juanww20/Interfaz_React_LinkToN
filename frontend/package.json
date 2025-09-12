@@ -16,6 +16,8 @@
     "@mui/material": "^7.3.2",
     "@types/video.js": "^7.3.58",
     "axios": "^1.11.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "cropperjs": "^2.0.1",
     "datatables.net": "^2.3.4",
     "datatables.net-buttons": "^3.2.5",
