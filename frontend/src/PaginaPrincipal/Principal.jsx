@@ -7,6 +7,7 @@ import Carousel from './components/CarouselFoto'
 import ContactSection from './components/ContactSection'
 import VideoCarousel from './components/CarouselVideo'
 import { useAuth } from '../store/AuthContext'
+import LoaderAnimation from '../PaginaUsuario/TangramReact/LoaderAnimation'
 
 function Principal() {
 
@@ -14,6 +15,7 @@ function Principal() {
 
     return (
         <>
+            <LoaderAnimation />
             <Intro></Intro>
             <About></About>
             <Services></Services>

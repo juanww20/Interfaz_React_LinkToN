@@ -1,14 +1,13 @@
-<script setup>
-import Cubo from './Tangram/Cubo.vue';
-import TrianguloGrande_1 from './Tangram/TrianguloGrande_1.vue';
-import TrianguloGrande_2 from './Tangram/TrianguloGrande_2.vue';
-import TrianguloMediano from './Tangram/TrianguloMediano.vue';
-import TrianguloPeque_1 from './Tangram/TrianguloPeque_1.vue';
-import TrianguloPeque_2 from './Tangram/TrianguloPeque_2.vue';
-import Romboide from './Tangram/Romboide.vue';
-import { ref, computed } from 'vue';
+import React, { useState, useEffect, useMemo } from 'react';
+import styles from './ComponenteTangram.module.css';
+import Cubo from './Cubo';
+import TrianguloGrande_1 from './TrianguloGrande_1';
+import TrianguloGrande_2 from './TrianguloGrande_2';
+import TrianguloMediano from './TrianguloMediano';
+import TrianguloPeque_1 from './TrianguloPeque_1';
+import TrianguloPeque_2 from './TrianguloPeque_2';
+import Romboide from './Romboide';
 
-// Definir los estilos de transform para cada paso
 const pasos = [
 
   // Paso 0 (figura1)
@@ -98,7 +97,7 @@ const pasos = [
       transform: 'translate3d(-335px, 85px, 200px) rotate(0deg) rotateZ(0deg)', zIndex: 4
     },
     'triangulo-mediano': {
-      transform: 'translate3d(-90px, -132px, 235px) rotateX(-20deg) rotateY(0deg)', zIndex: 5
+      transform: 'translate3d(-90px, -140px, 235px) rotateX(-20deg) rotateY(0deg)', zIndex: 5
     },
     'triangulo-peque-1': {
       transform: 'translate3d(-260px, 641px, 220px) rotateX(0deg) rotateZ(-133deg) rotateY(0deg)', zIndex: 6
@@ -126,7 +125,7 @@ const pasos = [
       transform: 'translate3d(-335px, 85px, 115px) rotate(0deg) rotateZ(0deg)', zIndex: 4
     },
     'triangulo-mediano': {
-      transform: 'translate3d(-300px, -132px, 280px) rotateX(-20deg) rotateY(0deg)', zIndex: 5
+      transform: 'translate3d(-300px, -140px, 280px) rotateX(-20deg) rotateY(0deg)', zIndex: 5
     },
     'triangulo-peque-1': {
       transform: 'translate3d(-260px, 635px, 180px) rotateX(0deg) rotateZ(-133deg) rotateY(0deg)', zIndex: 6
@@ -202,7 +201,7 @@ const pasos = [
       transform: 'translate3d(-388px, 18px, 200px) rotate(0deg) rotateZ(0deg)', zIndex: 4
     },
     'triangulo-mediano': {
-      transform: 'translate3d(25px, 533px, 235px) rotateX(20deg) rotateZ(179deg)', zIndex: 5
+      transform: 'translate3d(25px, 545px, 265px) rotateX(20deg) rotateZ(179deg)', zIndex: 5
     },
     'triangulo-peque-1': {
       transform: 'translate3d(5px, 202px, 220px) rotateX(0deg) rotateZ(-45deg) rotateY(0deg)', zIndex: 6
@@ -217,105 +216,75 @@ const pasos = [
       width: '100px', height: '100px', transform: 'translate3d(26px, 195px, 240px) rotateX(1deg) rotateZ(45deg) rotateY(0deg)', zIndex: 9
     }
   },
-
-
-
 ];
 
+const ComponenteTangram = () => {
+  const [pasoActual, setPasoActual] = useState(0);
+  const [direccion, setDireccion] = useState(1);
 
-const pasoActual = ref(0);
-let direccion = 1;
+  const getTangramSpeed = () => {
+    const speed = Number(localStorage.getItem('tangramSpeed'));
+    console.log(`Tangram Speed: ${speed}ms`);
+    return isNaN(speed) || speed <= 0 ? 400 : speed;
+  };
 
+  const tangramTransition = useMemo(() => {
+    const speed = Number(localStorage.getItem('tangramSpeed'));
+    const seconds = (isNaN(speed) || speed <= 0 ? 400 : speed) / 1000;
+    console.log(`Transition Speed: ${seconds}s`);
+    return `${seconds}s`;
+  }, []);
 
-// Animación automática reversible
-import { onMounted, onBeforeUnmount } from 'vue';
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setPasoActual(prevPaso => {
+        const nextPaso = prevPaso + direccion;
+        if (nextPaso >= pasos.length) {
+          setDireccion(-1);
+          return pasos.length - 1;
+        } else if (nextPaso < 0) {
+          setDireccion(1);
+          return 0;
+        }
+        return nextPaso;
+      });
+    }, getTangramSpeed());
 
-let intervalId = null;
-function getTangramSpeed() {
-  const speed = Number(localStorage.getItem('tangramSpeed'));
-  console.log(`Tangram Speed: ${speed}ms`);
-  return isNaN(speed) || speed <= 0 ? 400 : speed;
-}
+    return () => clearInterval(intervalId);
+  }, [direccion]);
 
-const tangramTransition = computed(() => {
-  const speed = Number(localStorage.getItem('tangramSpeed'));
-  const seconds = (isNaN(speed) || speed <= 0 ? 400 : speed) / 1000;
-  console.log(`Transition Speed: ${seconds}s`);
-  return `${seconds}s`;
-});
+  const estilos = pasos[pasoActual] || pasos[0]; // Fallback to first step if invalid index
 
-onMounted(() => {
-  intervalId = setInterval(() => {
-    if (pasoActual.value === pasos.length - 1) {
-      direccion = -1;
-    } else if (pasoActual.value === 0) {
-      direccion = 1;
-    }
-    pasoActual.value += direccion;
-  }, getTangramSpeed());
-});
-onBeforeUnmount(() => {
-  if (intervalId) clearInterval(intervalId);
-});
-
-
-
-
-
-const estilos = computed(() => pasos[pasoActual.value]);
-</script>
-
-<template>
-  <div class="preview-container">
-    <div class="tangram-container" :style="{ '--tangram-transition': tangramTransition }">
-      <div class="pieza triangulo-grande-1" :style="estilos['triangulo-grande-1']"><TrianguloGrande_1 /></div>
-      <div class="pieza triangulo-grande-2" :style="estilos['triangulo-grande-2']"><TrianguloGrande_2 /></div>
-      <div class="pieza triangulo-mediano" :style="estilos['triangulo-mediano']"><TrianguloMediano /></div>
-      <div class="pieza triangulo-peque-1" :style="estilos['triangulo-peque-1']"><TrianguloPeque_1 /></div>
-      <div class="pieza romboide" :style="estilos['romboide']"><Romboide></Romboide></div>
-      <div class="pieza triangulo-peque-2" :style="estilos['triangulo-peque-2']"><TrianguloPeque_2 /></div>
-      <div class="pieza cubo" :style="estilos['cubo']"><Cubo /></div>
+  return (
+    <div className={styles.previewContainer}>
+      <div 
+        className={styles.tangramContainer} 
+        style={{ '--tangram-transition': tangramTransition }}
+      >
+        <div className={`${styles.pieza} ${styles.trianguloGrande1}`} style={estilos['triangulo-grande-1']}>
+          <TrianguloGrande_1 />
+        </div>
+        <div className={`${styles.pieza} ${styles.trianguloGrande2}`} style={estilos['triangulo-grande-2']}>
+          <TrianguloGrande_2 />
+        </div>
+        <div className={`${styles.pieza} ${styles.trianguloMediano}`} style={estilos['triangulo-mediano']}>
+          <TrianguloMediano />
+        </div>
+        <div className={`${styles.pieza} ${styles.trianguloPeque1}`} style={estilos['triangulo-peque-1']}>
+          <TrianguloPeque_1 />
+        </div>
+        <div className={`${styles.pieza} ${styles.romboide}`} style={estilos['romboide']}>
+          <Romboide />
+        </div>
+        <div className={`${styles.pieza} ${styles.trianguloPeque2}`} style={estilos['triangulo-peque-2']}>
+          <TrianguloPeque_2 />
+        </div>
+        <div className={`${styles.pieza} ${styles.cubo}`} style={estilos['cubo']}>
+          <Cubo />
+        </div>
+      </div>
     </div>
-  </div>
-</template>
+  );
+};
 
-<style scoped>
-
-
-.preview-container {
-position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  perspective: 1000px;
-  transform-style: preserve-3d;
-  /* Aplica escala para loader */
-  transform: scale(0.4) rotateY(40deg) translate3d(-70vh, -40vw, 0px);
-}
-
-body, html {
-  overflow-y: auto;
-}
-
-.tangram-container {
-  transition: transform  1s cubic-bezier(.77,0,.18,1);
-  transform-style: preserve-3d;
-  overflow: visible; /* importante */
-}
-.pieza {
-  position: absolute;
-  transform-style: preserve-3d;
-  width: 100px;  /* Ajusta según tamaño real */
-  height: 100px; /* Ajusta según tamaño real */
-  box-sizing: border-box;
-  border: 1px solid transparent; /* para debugging, pon rojo para probar */
-  transition: transform var(--tangram-transition, 0.4s) cubic-bezier(.77,0,.18,1), z-index 1s;
-}
-/* Los transform y z-index ahora se manejan por binding en el template */
-</style>
+export default ComponenteTangram;

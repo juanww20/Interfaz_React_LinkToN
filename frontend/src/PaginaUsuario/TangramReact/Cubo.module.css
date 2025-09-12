@@ -8,7 +8,7 @@
   position: absolute;
   width: 100px;
   height: 100px;
-  background-color: #11d811d9;
+  background-color: var(--primary-color);
 }
 
 /* Profundidad ajustada: solo 36px → ±18px desde el centro */
@@ -23,23 +23,23 @@
 .right {
   width: 36px;
   transform: rotateY(90deg) translateZ(82px);
-  background-color: #0da00dd9;
+  background-color: var(--primary-color);
 }
 
 .left {
-  background-color: #0da00dd9;
+  background-color: var(--primary-color);
   width: 36px;
   transform: rotateY(-90deg) translateZ(18px);
 }
 
 .top {
-  background-color: #0da00dd9;
+  background-color: var(--primary-color);
   height: 36px;
   transform: rotateX(90deg) translateZ(18px);
 }
 
 .bottom {
-  background-color: #0da00dd9;
+  background-color: var(--primary-color);
   height: 36px;
   transform: rotateX(-90deg) translateZ(82px);
 }

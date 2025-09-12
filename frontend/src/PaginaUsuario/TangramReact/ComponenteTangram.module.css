@@ -1,0 +1,47 @@
+.previewContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  /* Aplica escala para loader */
+  transform: scale(0.4) rotateY(40deg) translate3d(-70vh, -40vw, 0px);
+}
+
+:global(body), :global(html) {
+  overflow-y: auto;
+}
+
+.tangramContainer {
+  transition: transform 1s cubic-bezier(.77,0,.18,1);
+  transform-style: preserve-3d;
+  overflow: visible; /* importante */
+}
+
+.pieza {
+  position: absolute;
+  transform-style: preserve-3d;
+  width: 100px;  /* Ajusta según tamaño real */
+  height: 100px; /* Ajusta según tamaño real */
+  box-sizing: border-box;
+  border: 1px solid transparent; /* para debugging, pon rojo para probar */
+  transition: transform var(--tangram-transition, 0.4s) cubic-bezier(.77,0,.18,1), z-index 1s;
+}
+
+/* Class names for each piece */
+.trianguloGrande1,
+.trianguloGrande2,
+.trianguloMediano,
+.trianguloPeque1,
+.trianguloPeque2,
+.romboide,
+.cubo {
+  composes: pieza;
+}
